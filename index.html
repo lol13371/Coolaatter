@@ -1998,38 +1998,31 @@
     </div>
   </div>
   <script>
-    db = window.localStorage;
-
-    if (db.getItem('amount') == null)
-    {
-        var amount = 8874
-        db.setItem("amount", amount)
-    } else {
-        var amount = parseInt(db.getItem('amount'))
+    const db = window.localStorage;
+let amount = parseInt(db.getItem('amount')) || 8874;
+let smooth_amount = amount;
+let counter = 0;
+// Update the count down every 1 second
+const x = setInterval(function() {
+  counter++;
+  if (counter > 40) {
+    counter = 0;
+    if (amount < 9989) {
+      const logic = Math.floor((1 - (amount / 9999)) * 100);
+      amount = Math.floor(Math.random() * logic) + amount;
+      db.setItem("amount", amount);
+      db.setItem("max", logic);
     }
-    smooth_amount = amount
-    var counter = 0
-    // Update the count down every 1 second
-    var x = setInterval(function() {
-      counter++
-      if (counter > 40)
-      {
-        counter = 0
-        if (amount < 9989)
-        {
-            logic = Math.floor((1 - (amount / 9999)) * 100)
-            amount = Math.floor(Math.random() * logic) + amount
-            db.setItem("amount", amount)
-            db.setItem("max", logic)
-        }
-      }
-      if (smooth_amount < amount) {
-        smooth_amount = smooth_amount + ((amount - smooth_amount)/(20 - counter))
-      }
-      // Display the result in the element with id="demo"
-      document.getElementById("nft_left").innerHTML = smooth_amount.toFixed(0);
-      // If the count down is finished, write some text
-    }, 100);
+  }
+  if (smooth_amount < amount) {
+    smooth_amount += (amount - smooth_amount) / (20 - counter);
+  }
+  // Display the result in the element with id="demo"
+  document.getElementById("nft_left").innerHTML = `${smooth_amount.toFixed(0)}`;
+  if (amount >= 9989) {
+    clearInterval(x);
+  }
+}, 100);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
